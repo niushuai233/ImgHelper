@@ -1,7 +1,5 @@
 package cc.niushuai.projects.imghelper.config;
 
-import cc.niushuai.projects.imghelper.enums.Symbols;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,19 +30,19 @@ public class Config {
         CONFIG_MAP.put("author", "niushuai233");
         CONFIG_MAP.put("email", "shuai.niu@foxmail.com");
         CONFIG_MAP.put("version", "1.0");
-        CONFIG_MAP.put("build_time", System.currentTimeMillis());
-
     }
 
     public static String getProperty(String key) {
-
         return getProperty(key, String.class);
     }
 
-    public static <T> T getProperty(String key, Class<T> clazz) {
+    public static String getProperty(String key, String defaultValue) {
+        String value = getProperty(key);
+        return (value != null ? value : defaultValue);
+    }
 
-        Class<? super String> clazzx = null;
-        return (T) getProperty(key, clazzx, "");
+    public static <T> T getProperty(String key, Class<T> targetType) {
+        return getPropertyValue(key, targetType);
     }
 
     public static <T> T getProperty(String key, Class<T> targetType, T defaultValue) {
@@ -54,8 +52,22 @@ public class Config {
 
     private static <T> T getPropertyValue(String key, Class<T> targetType) {
 
+        if (CONFIG_MAP.isEmpty()) {
+            return null;
+        }
 
+        Object value = CONFIG_MAP.get(key);
 
-        return null;
+        if (value == null) {
+            return null;
+        }
+
+        if (!targetType.isAssignableFrom(value.getClass())) {
+
+            // 值类型不匹配
+            throw new RuntimeException("值类型[" + value.getClass().getName() + "]不匹配[" + targetType.getName() + "]");
+        }
+
+        return (T) value;
     }
 }
