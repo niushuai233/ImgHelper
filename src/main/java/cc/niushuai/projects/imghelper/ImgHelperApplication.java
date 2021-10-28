@@ -1,6 +1,7 @@
 package cc.niushuai.projects.imghelper;
 
 import cc.niushuai.projects.imghelper.config.Config;
+import cc.niushuai.projects.imghelper.frames.App;
 
 /**
  * 图床工具
@@ -22,6 +23,9 @@ public class ImgHelperApplication {
 
         // 读取配置文件加载到内存
         Config.loadConfig();
+
+        // 启动 app
+        new App("图床工").run();
     }
 
 }
